@@ -1,1 +1,1 @@
-# 2D-air-craft-game-in-FPGA
+# 2D-aircraft-game-in-FPGA
