@@ -76,6 +76,16 @@ signal enemy_dy: integer := 20;
 signal enemy_display: std_logic := '0';
 --kill_enemy
 signal enemy_alive: std_logic := '1';
+--enemy_bullet
+constant ENEMY_BULLET_WIDTH: integer := 20;
+constant ENEMY_BULLET_HEIGHT: integer := 20;
+signal enemy_bullet_x: integer := -ENEMY_BULLET_WIDTH; -- Initialize off-screen
+signal enemy_bullet_y: integer := -ENEMY_BULLET_HEIGHT; -- Initialize off-screen
+signal enemy_shoot_bullet: std_logic := '0';
+signal new_enemy_bullet_x: integer;
+signal new_enemy_bullet_y: integer;
+--kill_aircraft
+signal aircraft_alive: std_logic := '1';
 
 component clock_divider is
  generic (N: integer);
@@ -205,6 +215,11 @@ begin
                 enemy_y <= enemy_y - enemy_dy;
             end if;
         end if;
+        
+        if(enemy_alive = '1' and enemy_bullet_y <= V_START) then
+            new_enemy_bullet_x <= enemy_x + (ENEMY_WIDTH / 2) - (ENEMY_BULLET_WIDTH / 2);
+            new_enemy_bullet_y <= enemy_y - ENEMY_BULLET_HEIGHT;
+        end if;
                             
     end if;
 end process;
@@ -235,6 +250,35 @@ begin
     end if;
 end process;
 
+enemy_bullet_movement_process: process(clk10Hz)
+begin
+    if(rising_edge(clk10Hz)) then
+        if (enemy_shoot_bullet = '1') then
+            if (enemy_bullet_x > 0) then
+                enemy_bullet_x <= enemy_bullet_x - dx;
+            else
+                enemy_shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
+            end if;
+        -- Add the following lines to trigger shooting when the enemy is alive
+        elsif (enemy_alive = '1' and enemy_shoot_bullet = '0') then
+            enemy_shoot_bullet <= '1';
+            enemy_bullet_x <= enemy_x - ENEMY_BULLET_WIDTH;
+            enemy_bullet_y <= enemy_y + (ENEMY_HEIGHT / 2) - (ENEMY_BULLET_HEIGHT / 2); -- Set the bullet_y initial position to the top of the enemy
+        -- End of added lines
+        else
+            enemy_shoot_bullet <= '0';
+            enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
+        end if;
+        -- Check for collision with aircraft
+        if (enemy_bullet_x >= x and enemy_bullet_x < x + SIZE and enemy_bullet_y >= y and enemy_bullet_y < y + SIZE and aircraft_alive = '1') then
+            aircraft_alive <= '0'; -- Aircraft is hit
+            enemy_shoot_bullet <= '0'; -- Enemy bullet disappears
+            enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
+        end if;
+    end if;
+end process;
+
+
 
 --display
 process (hcount, vcount, x, y, bullet_x, bullet_y)
@@ -246,8 +290,10 @@ begin
         --enemy
         elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH and enemy_alive = '1') then
             color <= C_blue;
-        --square
-        elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE) then
+        elsif (hcount >= enemy_bullet_x and hcount < enemy_bullet_x + ENEMY_BULLET_WIDTH and vcount >= enemy_bullet_y and vcount < enemy_bullet_y + ENEMY_BULLET_HEIGHT) then
+            color <= C_Yellow;
+        -- square (aircraft)
+        elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
             color <= C_Red;
         else
             color <= C_BLACK;
