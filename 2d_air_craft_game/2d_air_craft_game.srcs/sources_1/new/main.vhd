@@ -67,13 +67,15 @@ signal shoot_bullet: std_logic := '0';
 signal new_bullet_x: integer;
 signal new_bullet_y: integer;
 --enemy
-constant ENEMY_WIDTH: integer := 50;
-constant ENEMY_HEIGHT: integer := 50;
+constant ENEMY_WIDTH: integer := 100;
+constant ENEMY_HEIGHT: integer := 100;
 signal enemy_x: integer := H_END - ENEMY_HEIGHT;
 signal enemy_y: integer := V_TOTAL/2;
 signal enemy_dx: integer := 20;
 signal enemy_dy: integer := 20;
 signal enemy_display: std_logic := '0';
+--kill_enemy
+signal enemy_alive: std_logic := '1';
 
 component clock_divider is
  generic (N: integer);
@@ -207,20 +209,6 @@ begin
     end if;
 end process;
 
---bullet_movement_process: process(clk10Hz)
---begin
---    if(rising_edge(clk10Hz)) then
---        if (bullet_x > H_START) then
---            bullet_x <= bullet_x + dx;
---        elsif (shoot = '1') then
---            bullet_x <= x - BULLET_WIDTH;
---            bullet_y <= y + (SIZE / 2) - (BULLET_HEIGHT / 2);
---        else
---            bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
---        end if;
---    end if;
---end process;
-
 bullet_movement_process: process(clk10Hz)
 begin
     if(rising_edge(clk10Hz)) then
@@ -238,6 +226,12 @@ begin
             shoot_bullet <= '0';
             bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
         end if;
+       -- Check for collision with enemy
+        if (bullet_x >= enemy_x and bullet_x < enemy_x + ENEMY_WIDTH and bullet_y >= enemy_y and bullet_y < enemy_y + ENEMY_HEIGHT and enemy_alive = '1') then
+            enemy_alive <= '0'; -- Enemy is killed
+            shoot_bullet <= '0'; -- Bullet disappears
+            bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
+        end if;
     end if;
 end process;
 
@@ -250,7 +244,7 @@ begin
         if (hcount >= bullet_x and hcount < bullet_x + BULLET_WIDTH and vcount >= bullet_y and vcount < bullet_y + BULLET_HEIGHT) then
             color <= C_White;
         --enemy
-        elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH) then
+        elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH and enemy_alive = '1') then
             color <= C_blue;
         --square
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE) then
