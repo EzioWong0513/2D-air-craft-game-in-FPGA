@@ -64,6 +64,8 @@ constant BULLET_HEIGHT: integer := 50;
 signal bullet_x: integer := -BULLET_WIDTH; -- Initialize off-screen
 signal bullet_y: integer := -BULLET_HEIGHT; -- Initialize off-screen
 signal shoot_bullet: std_logic := '0';
+signal new_bullet_x: integer;
+signal new_bullet_y: integer;
 --enemy
 constant ENEMY_WIDTH: integer := 50;
 constant ENEMY_HEIGHT: integer := 50;
@@ -171,8 +173,8 @@ begin
         
         --shoot
         if (shoot = '1' and bullet_y <= V_START) then
-            bullet_x <= x + (SIZE / 2) - (BULLET_WIDTH / 2);
-            bullet_y <= y - BULLET_HEIGHT;
+            new_bullet_x <= x + (SIZE / 2) - (BULLET_WIDTH / 2);
+            new_bullet_y <= y - BULLET_HEIGHT;
         end if;
         
         --enemy
@@ -205,34 +207,56 @@ begin
     end if;
 end process;
 
+--bullet_movement_process: process(clk10Hz)
+--begin
+--    if(rising_edge(clk10Hz)) then
+--        if (bullet_x > H_START) then
+--            bullet_x <= bullet_x + dx;
+--        elsif (shoot = '1') then
+--            bullet_x <= x - BULLET_WIDTH;
+--            bullet_y <= y + (SIZE / 2) - (BULLET_HEIGHT / 2);
+--        else
+--            bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
+--        end if;
+--    end if;
+--end process;
+
 bullet_movement_process: process(clk10Hz)
 begin
     if(rising_edge(clk10Hz)) then
-        if (bullet_y > V_START) then
-            bullet_y <= bullet_y - dy;
+        if (shoot_bullet = '1') then
+            if (bullet_x < H_END) then
+                bullet_x <= bullet_x + dx;
+            else
+                shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
+            end if;
+        elsif (shoot = '1' and shoot_bullet = '0') then
+            shoot_bullet <= '1';
+            bullet_x <= x + SIZE;
+            bullet_y <= y + (SIZE / 2) - (BULLET_WIDTH / 2); -- Set the bullet_y initial position to the top of the aircraft
         else
-            bullet_y <= -BULLET_HEIGHT; -- Reset the bullet off-screen when it reaches the top
+            shoot_bullet <= '0';
+            bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
         end if;
     end if;
 end process;
 
+
 --display
-process (hcount, vcount, x, y)
+process (hcount, vcount, x, y, bullet_x, bullet_y)
 begin
     if ((hcount >= H_START and hcount < H_END) and (vcount >= V_START and vcount < V_TOTAL)) then
         --bullet
         if (hcount >= bullet_x and hcount < bullet_x + BULLET_WIDTH and vcount >= bullet_y and vcount < bullet_y + BULLET_HEIGHT) then
             color <= C_White;
-        end if;
         --enemy
-        if (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH) then
+        elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH) then
             color <= C_blue;
-        end if;
         --square
-        if (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE) then
-            color <= C_RED;
---        else
---            color <= C_BLACK;
+        elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE) then
+            color <= C_Red;
+        else
+            color <= C_BLACK;
         end if;
     else
         color <= C_BLACK;
