@@ -37,7 +37,8 @@ entity main is
     red, green, blue: out std_logic_vector(3 downto 0);
     moveU, moveD, moveL, moveR: in std_logic;
     shoot: in std_logic;
-    display_enemy: in std_logic);
+    display_enemy: in std_logic;
+    reset_game: in std_logic);
 end main;
 
 architecture Behavioral of main is
@@ -155,130 +156,139 @@ end process vsync_gen_proc;
 u_clk1hz : clock_divider generic map(N =>50000000) port map(clk, clk1Hz);
 u_clk10hz : clock_divider generic map(N =>5000000) port map(clk, clk10Hz);
 
---move up, down, left, right && shoot
 process(clk10Hz)
 begin
     if(rising_edge(clk10Hz)) then
-        if (moveU = '1') then
-            if (x < (H_END - SIZE)) then
-                x <= x + dx; 
-            end if;
-        end if;
-
-        if (moveD = '1') then
-            if (x > H_START) then
-                x <= x - dx; 
-            end if;
-        end if;
-
-        if (moveL = '1') then
-            if (y > V_START) then
-                y <= y - dy;
-            end if;
-        end if;
-
-        if (moveR = '1') then
-            if (y < (V_END - SIZE)) then
-                y <= y + dy;
-            end if;
-        end if;   
-        
-        --shoot
-        if (shoot = '1' and bullet_y <= V_START) then
-            new_bullet_x <= x + (SIZE / 2) - (BULLET_WIDTH / 2);
-            new_bullet_y <= y - BULLET_HEIGHT;
-        end if;
-        
-        --enemy
-        if(display_enemy = '1') then
-            if (enemy_x + ENEMY_HEIGHT >= H_END) then
-                flagx <= '0';       
-            elsif (enemy_x <= H_START) then
-                flagx <= '1';
-            end if;
-                         
-            if (enemy_y + ENEMY_WIDTH >= V_END) then
-                flagy <= '0';
-            elsif (enemy_y <= V_START) then
-                flagy <= '1';
-            end if;
-               
-            if(flagx = '1') then
-                enemy_x <= enemy_x + enemy_dx;
-            elsif (flagx = '0') then
-                enemy_x <= enemy_x - enemy_dx;
-            end if;
-                         
-            if(flagy = '1') then
-                enemy_y <= enemy_y + enemy_dy;
-            elsif (flagy = '0') then
-                enemy_y <= enemy_y - enemy_dy;
-            end if;
-        end if;
-        
-        if(enemy_alive = '1' and enemy_bullet_y <= V_START) then
-            new_enemy_bullet_x <= enemy_x + (ENEMY_WIDTH / 2) - (ENEMY_BULLET_WIDTH / 2);
-            new_enemy_bullet_y <= enemy_y - ENEMY_BULLET_HEIGHT;
-        end if;
-                            
-    end if;
-end process;
-
-bullet_movement_process: process(clk10Hz)
-begin
-    if(rising_edge(clk10Hz)) then
-        if (shoot_bullet = '1') then
-            if (bullet_x < H_END) then
-                bullet_x <= bullet_x + dx;
-            else
-                shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
-            end if;
-        elsif (shoot = '1' and shoot_bullet = '0') then
-            shoot_bullet <= '1';
-            bullet_x <= x + SIZE;
-            bullet_y <= y + (SIZE / 2) - (BULLET_WIDTH / 2); -- Set the bullet_y initial position to the top of the aircraft
-        else
+        -- Reset game state when reset_game is '1'
+        if (reset_game = '1') then
+            x <= H_START;
+            y <= V_START;
+            enemy_x <= H_END - ENEMY_HEIGHT;
+            enemy_y <= V_TOTAL / 2;
+            enemy_alive <= '1';
+            aircraft_alive <= '1';
             shoot_bullet <= '0';
-            bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
-        end if;
-       -- Check for collision with enemy
-        if (bullet_x >= enemy_x and bullet_x < enemy_x + ENEMY_WIDTH and bullet_y >= enemy_y and bullet_y < enemy_y + ENEMY_HEIGHT and enemy_alive = '1') then
-            enemy_alive <= '0'; -- Enemy is killed
-            shoot_bullet <= '0'; -- Bullet disappears
-            bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
-        end if;
-    end if;
-end process;
-
-enemy_bullet_movement_process: process(clk10Hz)
-begin
-    if(rising_edge(clk10Hz)) then
-        if (enemy_shoot_bullet = '1') then
-            if (enemy_bullet_x > 0) then
-                enemy_bullet_x <= enemy_bullet_x - dx;
-            else
-                enemy_shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
-            end if;
-        -- Add the following lines to trigger shooting when the enemy is alive
-        elsif (enemy_alive = '1' and enemy_shoot_bullet = '0') then
-            enemy_shoot_bullet <= '1';
-            enemy_bullet_x <= enemy_x - ENEMY_BULLET_WIDTH;
-            enemy_bullet_y <= enemy_y + (ENEMY_HEIGHT / 2) - (ENEMY_BULLET_HEIGHT / 2); -- Set the bullet_y initial position to the top of the enemy
-        -- End of added lines
-        else
+            bullet_x <= -BULLET_WIDTH;
+            bullet_y <= -BULLET_HEIGHT;
             enemy_shoot_bullet <= '0';
-            enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
-        end if;
-        -- Check for collision with aircraft
-        if (enemy_bullet_x >= x and enemy_bullet_x < x + SIZE and enemy_bullet_y >= y and enemy_bullet_y < y + SIZE and aircraft_alive = '1') then
-            aircraft_alive <= '0'; -- Aircraft is hit
-            enemy_shoot_bullet <= '0'; -- Enemy bullet disappears
-            enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
+            enemy_bullet_x <= -ENEMY_BULLET_WIDTH;
+            enemy_bullet_y <= -ENEMY_BULLET_HEIGHT;
+        else
+            -- The existing code for movements, shooting, and enemy actions
+            --/*move up, down, left, right && shoot
+            if (moveU = '1') then
+                if (x < (H_END - SIZE)) then
+                    x <= x + dx; 
+                end if;
+            end if;
+           
+            if (moveD = '1') then
+                if (x > H_START) then
+                    x <= x - dx; 
+                end if;
+            end if;
+           
+            if (moveL = '1') then
+                if (y > V_START) then
+                    y <= y - dy;
+                end if;
+            end if;
+           
+            if (moveR = '1') then
+                if (y < (V_END - SIZE)) then
+                    y <= y + dy;
+                end if;
+            end if;   
+                   
+            --shoot
+            if (shoot = '1' and bullet_y <= V_START) then
+                 new_bullet_x <= x + (SIZE / 2) - (BULLET_WIDTH / 2);
+                new_bullet_y <= y - BULLET_HEIGHT;
+            end if;
+                   
+            --enemy
+            if(display_enemy = '1') then
+                if (enemy_x + ENEMY_HEIGHT >= H_END) then
+                    flagx <= '0';       
+                elsif (enemy_x <= H_START) then
+                    flagx <= '1';
+                end if;
+                                    
+                if (enemy_y + ENEMY_WIDTH >= V_END) then
+                    flagy <= '0';
+                elsif (enemy_y <= V_START) then
+                    flagy <= '1';
+                end if;
+                          
+                if(flagx = '1') then
+                    enemy_x <= enemy_x + enemy_dx;
+                elsif (flagx = '0') then
+                    enemy_x <= enemy_x - enemy_dx;
+                end if;
+                                    
+                if(flagy = '1') then
+                    enemy_y <= enemy_y + enemy_dy;
+                elsif (flagy = '0') then
+                    enemy_y <= enemy_y - enemy_dy;
+                end if;
+            end if;
+            --move up, down, left, right && shoot END*/
+            
+            --/*bullet_movement_process
+                   if(enemy_alive = '1' and enemy_bullet_y <= V_START) then
+                       new_enemy_bullet_x <= enemy_x + (ENEMY_WIDTH / 2) - (ENEMY_BULLET_WIDTH / 2);
+                       new_enemy_bullet_y <= enemy_y - ENEMY_BULLET_HEIGHT;
+                   end if;
+                   
+                    if (shoot_bullet = '1') then
+                        if (bullet_x < H_END) then
+                            bullet_x <= bullet_x + dx;
+                        else
+                            shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
+                        end if;
+                    elsif (shoot = '1' and shoot_bullet = '0') then
+                        shoot_bullet <= '1';
+                        bullet_x <= x + SIZE;
+                        bullet_y <= y + (SIZE / 2) - (BULLET_WIDTH / 2); -- Set the bullet_y initial position to the top of the aircraft
+                    else
+                        shoot_bullet <= '0';
+                        bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
+                    end if;
+                    -- Check for collision with enemy
+                    if (bullet_x >= enemy_x and bullet_x < enemy_x + ENEMY_WIDTH and bullet_y >= enemy_y and bullet_y < enemy_y + ENEMY_HEIGHT and enemy_alive = '1') then
+                        enemy_alive <= '0'; -- Enemy is killed
+                        shoot_bullet <= '0'; -- Bullet disappears
+                        bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
+                    end if;
+            --bullet_movement_process END*/
+
+            --enemy_bullet_movement_process          
+                    if (enemy_shoot_bullet = '1') then
+                        if (enemy_bullet_x > 0) then
+                            enemy_bullet_x <= enemy_bullet_x - dx;
+                        else
+                            enemy_shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
+                        end if;
+                    -- Add the following lines to trigger shooting when the enemy is alive
+                    elsif (enemy_alive = '1' and enemy_shoot_bullet = '0') then
+                        enemy_shoot_bullet <= '1';
+                        enemy_bullet_x <= enemy_x - ENEMY_BULLET_WIDTH;
+                        enemy_bullet_y <= enemy_y + (ENEMY_HEIGHT / 2) - (ENEMY_BULLET_HEIGHT / 2); -- Set the bullet_y initial position to the top of the enemy
+                    -- End of added lines
+                    else
+                        enemy_shoot_bullet <= '0';
+                        enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
+                    end if;
+                    -- Check for collision with aircraft
+                    if (enemy_bullet_x >= x and enemy_bullet_x < x + SIZE and enemy_bullet_y >= y and enemy_bullet_y < y + SIZE and aircraft_alive = '1') then
+                        aircraft_alive <= '0'; -- Aircraft is hit
+                        enemy_shoot_bullet <= '0'; -- Enemy bullet disappears
+                        enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
+                    end if;
+            --enemy_bullet_movement_process END*/
         end if;
     end if;
 end process;
-
-
 
 --display
 process (hcount, vcount, x, y, bullet_x, bullet_y)
