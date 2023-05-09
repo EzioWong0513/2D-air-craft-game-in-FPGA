@@ -97,14 +97,8 @@ signal boss_dx: integer := 20;
 signal boss_flagx: std_logic := '1';
 signal boss_flagy: std_logic := '1';
 signal boss_hp: integer := 10 - 1; --10HP
-signal boss_attack_type: integer := 0;
-constant BOSS_PROJECTILE_SPEED : integer := 2;
-constant BOSS_ATTACK_INTERVAL: integer := 100;
-type boss_projectile_positions_type is array (0 to 2) of integer;
-signal boss_projectiles_x: boss_projectile_positions_type := (others => -1);
-signal boss_projectiles_y: boss_projectile_positions_type := (others => -1);
-signal boss_projectile_counters: boss_projectile_positions_type := (others => 0);
-signal condition_met: boolean;
+constant BOSS_BULLET_WIDTH: integer := 20;
+constant BOSS_BULLET_HEIGHT: integer := 20;
 --kill Boss
 signal boss_alive: std_logic := '1';
 
@@ -189,18 +183,21 @@ begin
             enemy_y <= V_TOTAL / 2;
             enemy_alive <= '1';
             aircraft_alive <= '1';
+            boss_alive <= '1';
             shoot_bullet <= '0';
             bullet_x <= -BULLET_WIDTH;
             bullet_y <= -BULLET_HEIGHT;
             enemy_shoot_bullet <= '0';
             enemy_bullet_x <= -ENEMY_BULLET_WIDTH;
             enemy_bullet_y <= -ENEMY_BULLET_HEIGHT;
-            
+            -- Reset the boss's health points
+            boss_hp <= 10 - 1; --10HP
             -- Reset the enemy's health points
             enemy_hp <= 3 - 1; --3HP
             -- Reset the aircraft's health points
             aircraft_hp <= 10 - 1; --10HP
         else
+
             -- The existing code for movements, shooting, and enemy actions
             --/*move up, down, left, right && shoot
             if (moveU = '1') then
@@ -291,6 +288,17 @@ begin
                             enemy_alive <= '0'; -- Enemy is killed
                         end if;
                     end if;
+                    
+                    -- Check for collision with boss
+                    if (bullet_x >= boss_x and bullet_x < boss_x + BOSS_WIDTH and bullet_y >= boss_y and bullet_y < boss_y + BOSS_HEIGHT and boss_alive = '1') then
+                        boss_hp <= boss_hp - 1; -- Decrement boss's health points
+                        shoot_bullet <= '0'; -- Bullet disappears
+                        bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
+                    
+                        if (boss_hp = 0) then
+                            boss_alive <= '0'; -- Boss is killed
+                        end if;
+                    end if;
             --bullet_movement_process END*/
 
             --enemy_bullet_movement_process          
@@ -322,11 +330,17 @@ begin
                     end if;
             --enemy_bullet_movement_process END*/
             
-            --boss_movement     
-            if (boss_y > V_START) then
-                boss_y <= boss_y - 20;
-            elsif (boss_y < (V_END - BOSS_HEIGHT)) then
+            --boss_movement
+            if (boss_y <= V_START) then
+                boss_flagy <= '1';
+            elsif (boss_y >= (V_END - BOSS_HEIGHT)) then
+                boss_flagy <= '0';
+            end if;
+            
+            if (boss_flagy = '1') then
                 boss_y <= boss_y + 20;
+            elsif (boss_flagy = '0') then
+                boss_y <= boss_y - 20;
             end if;
             --boss_movement END
         end if;
@@ -349,7 +363,7 @@ begin
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
             color <= C_Red;
         --boss and projectiles
-        elsif (hcount >= boss_x and hcount < boss_x + BOSS_HEIGHT and vcount < boss_y + BOSS_WIDTH and boss_y < vcount) then
+        elsif (hcount >= boss_x and hcount < boss_x + BOSS_HEIGHT and vcount < boss_y + BOSS_WIDTH and boss_y < vcount and boss_alive = '1') then
             color <= C_Green;
         else
             color <= C_Black;
