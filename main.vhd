@@ -76,25 +76,19 @@ signal enemy_y: integer := V_TOTAL/2;
 signal enemy_dx: integer := 20;
 signal enemy_dy: integer := 20;
 signal enemy_display: std_logic := '0';
-signal enemy_hp: integer:= 3-1;
+
 --Stage2enemyA
 signal s2aenemy_x: integer := H_END - ENEMY_HEIGHT;
 signal s2aenemy_y: integer := 200;
 signal s2aenemy_display: std_logic := '0';
-signal s2aenemy_hp: integer:= 3-1;
-
 --Stage2eneymB
 signal s2benemy_x: integer := H_END - ENEMY_HEIGHT;
 signal s2benemy_y: integer := 400;
 signal s2benemy_display: std_logic := '0';
-signal s2benemy_hp: integer:= 3-1;
-
 --Stage2eneymC
 signal s2cenemy_x: integer := H_END - ENEMY_HEIGHT;
 signal s2cenemy_y: integer := 600;
 signal s2cenemy_display: std_logic := '0';
-signal s2cenemy_hp: integer:= 3-1;
-
 --kill_enemy
 signal enemy_alive: std_logic := '1';
 signal s2aenemy_alive: std_logic := '0';
@@ -157,15 +151,6 @@ type colors is (C_Black, C_Green, C_Blue, C_Red, C_White, C_Yellow);
 type T_1D is array(0 to 4) of colors;
 signal rand_val: std_logic_vector(2 downto 0);
 signal color : colors;
-signal aircraft_hp: integer := 10 - 1; --10HP
-
---Heart health icon
-signal heart_width: integer := 30;
-signal heart_height: integer := 10;
-signal heart_health_bar_x: integer:= H_START + 5;
-signal heart_health_bar_y: integer:= V_START + 5;
-signal heart_health_bar_width: integer:= 500;
-signal heart_health_bar_height: integer:= 30;
 begin
 u_clk50mhz: clock_divider generic map(N=>1) port map(clk, clk50MHz); 
 
@@ -216,7 +201,6 @@ u_clk10hz : clock_divider generic map(N =>5000000) port map(clk, clk10Hz);
 process(clk10Hz)
 begin
     if(rising_edge(clk10Hz)) then
-        
         rand_val <= rand_val(1 downto 0) & (rand_val(2) xor rand_val(1));
         -- Reset game state when reset_game is '1'
         if (reset_game = '1') then
@@ -244,14 +228,7 @@ begin
             s2aenemy_bullet_y <= -ENEMY_BULLET_HEIGHT;
             s2benemy_bullet_y <= -ENEMY_BULLET_HEIGHT;
             s2cenemy_bullet_y <= -ENEMY_BULLET_HEIGHT;
-            -- Reset the enemy's health points
-            enemy_hp <= 3 - 1; --3HP
-            s2aenemy_hp <= 3 - 1; --3HP
-            s2benemy_hp <= 3 - 1; --3HP
-            s2cenemy_hp <= 3 - 1; --3HP
-            -- Reset the aircraft's health points
-            aircraft_hp <= 10 - 1; --10HP
-            Stage <= "100";      
+            Stage <= "100";
         else
             -- The existing code for movements, shooting, and enemy actions
             --/*move up, down, left, right && shoot
@@ -281,10 +258,8 @@ begin
                    
             --shoot
             if (shoot = '1' and bullet_y <= V_START) then
-                if (aircraft_alive = '1') then
                  new_bullet_x <= x + (SIZE / 2) - (BULLET_WIDTH / 2);
                 new_bullet_y <= y - BULLET_HEIGHT;
-                end if;
             end if;
                    
             --enemy
@@ -292,7 +267,7 @@ begin
                 if(display_enemy = '1') then
                     if (enemy_x + ENEMY_HEIGHT >= H_END) then
                         flagx <= '0';       
-                    elsif (enemy_x <= (H_START+H_END)/2) then
+                    elsif (enemy_x <= H_START) then
                         flagx <= '1';
                     end if;
                                         
@@ -323,7 +298,7 @@ begin
                         else
                             s2aflagy <= '1';
                         end if;
-                    elsif ((s2aenemy_x <= (H_START+H_END)/2)) then
+                    elsif ((s2aenemy_x <= H_START)) then
                         s2aflagx <= '1';
                         if (rand_val(0) = '1') then
                             s2aflagy <= '1';
@@ -339,7 +314,7 @@ begin
                         else
                             s2bflagy <= '0';
                         end if;  
-                    elsif ((s2benemy_x <= (H_START+H_END)/2)) then
+                    elsif ((s2benemy_x <= H_START)) then
                         s2bflagx <= '1';
                         if (rand_val(1) = '1') then
                             s2bflagy <= '1';
@@ -355,7 +330,7 @@ begin
                         else
                             s2cflagy <= '0';
                         end if;        
-                    elsif ((s2cenemy_x <= (H_START+H_END)/2)) then
+                    elsif ((s2cenemy_x <= H_START)) then
                         s2cflagx <= '1';
                         if (rand_val(2) = '1') then
                             s2cflagy <= '1';
@@ -439,28 +414,23 @@ begin
                         shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
                     end if;
                 elsif (shoot = '1' and shoot_bullet = '0') then
-                    if (aircraft_alive = '1') then
                     shoot_bullet <= '1';
                     bullet_x <= x + SIZE;
                     bullet_y <= y + (SIZE / 2) - (BULLET_WIDTH / 2); -- Set the bullet_y initial position to the top of the aircraft
-                    end if;
                 else
                     shoot_bullet <= '0';
                     bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
                 end if;
                 -- Check for collision with enemy
                 if (bullet_x >= enemy_x and bullet_x < enemy_x + ENEMY_WIDTH and bullet_y >= enemy_y and bullet_y < enemy_y + ENEMY_HEIGHT and enemy_alive = '1') then
+                    enemy_alive <= '0'; -- Enemy is killed
                     shoot_bullet <= '0'; -- Bullet disappears
                     bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
-                    enemy_hp <= enemy_hp - 1; -- Decrement enemy's health points
-                    if (enemy_hp = 0) then
-                         s2aenemy_alive <= '1'; -- Enemy is killed
-                         s2benemy_alive <= '1'; -- Enemy is killed
-                         s2cenemy_alive <= '1'; -- Enemy is killed
-                         enemy_alive <= '0'; -- Enemy is killed
-                         Stage <= "010";--asd
-                    end if;
-                end if; 
+                    s2aenemy_alive <= '1'; -- Enemy is killed
+                    s2benemy_alive <= '1'; -- Enemy is killed
+                    s2cenemy_alive <= '1'; -- Enemy is killed
+                    Stage <= "010";
+                end if;
                 --bullet_movement_process END*/
     
         --enemy_bullet_movement_process          
@@ -482,16 +452,12 @@ begin
                 end if;
                 -- Check for collision with aircraft
                 if (enemy_bullet_x >= x and enemy_bullet_x < x + SIZE and enemy_bullet_y >= y and enemy_bullet_y < y + SIZE and aircraft_alive = '1') then
-                    aircraft_hp <= aircraft_hp - 1;
+                    aircraft_alive <= '0'; -- Aircraft is hit
                     enemy_shoot_bullet <= '0'; -- Enemy bullet disappears
                     enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
-                    if(aircraft_hp = 0) then
-                        aircraft_alive <= '0'; -- Aircraft is hit
-                    end if;
                 end if;
         --enemy_bullet_movement_process END*/
               elsif (Stage="010") then
-                             enemy_alive <= '0'; -- Enemy is killed
                              enemy_shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
                              enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
                              if(s2aenemy_alive = '1' and s2aenemy_bullet_y <= V_START) then
@@ -514,41 +480,30 @@ begin
                                       shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
                                   end if;
                               elsif (shoot = '1' and shoot_bullet = '0') then
-                                  if (aircraft_alive = '1') then
                                   shoot_bullet <= '1';
                                   bullet_x <= x + SIZE;
                                   bullet_y <= y + (SIZE / 2) - (BULLET_WIDTH / 2); -- Set the bullet_y initial position to the top of the aircraft
-                                  end if;
                               else
                                   shoot_bullet <= '0';
                                   bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
                               end if;
                               -- Check for collision with s2a enemy
                               if (bullet_x >= s2aenemy_x and bullet_x < s2aenemy_x + ENEMY_WIDTH and bullet_y >= s2aenemy_y and bullet_y < s2aenemy_y + ENEMY_HEIGHT and s2aenemy_alive = '1') then
-                                  s2aenemy_hp <= s2aenemy_hp - 1; -- Decrement enemy's health points
+                                  s2aenemy_alive <= '0'; -- Enemy is killed
                                   shoot_bullet <= '0'; -- Bullet disappears
                                   bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
-                                  if (s2aenemy_hp = 0) then
-                                      s2aenemy_alive <= '0'; -- Enemy is killed
-                                  end if;
                               end if;
                               -- Check for collision with s2b enemy
                               if (bullet_x >= s2benemy_x and bullet_x < s2benemy_x + ENEMY_WIDTH and bullet_y >= s2benemy_y and bullet_y < s2benemy_y + ENEMY_HEIGHT and s2benemy_alive = '1') then
-                                  s2benemy_hp <= s2benemy_hp - 1; -- Decrement enemy's health points
+                                  s2benemy_alive <= '0'; -- Enemy is killed
                                   shoot_bullet <= '0'; -- Bullet disappears
                                   bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
-                                  if (s2benemy_hp = 0) then
-                                      s2benemy_alive <= '0'; -- Enemy is killed
-                                  end if;
                               end if;
-                              -- Check for collision with s2c enemy
+                              -- Check for collision with s2b enemy
                               if (bullet_x >= s2cenemy_x and bullet_x < s2cenemy_x + ENEMY_WIDTH and bullet_y >= s2cenemy_y and bullet_y < s2cenemy_y + ENEMY_HEIGHT and s2cenemy_alive = '1') then
-                                    s2cenemy_hp <= s2cenemy_hp - 1; -- Decrement enemy's health points
+                                    s2cenemy_alive <= '0'; -- Enemy is killed
                                     shoot_bullet <= '0'; -- Bullet disappears
                                     bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
-                                    if (s2cenemy_hp = 0) then
-                                        s2cenemy_alive <= '0'; -- Enemy is killed
-                                    end if;
                               end if;
                               --bullet_movement_process END*/
                   
@@ -571,12 +526,9 @@ begin
                               end if;
                               -- Check for collision with aircraft
                               if (s2aenemy_bullet_x >= x and s2aenemy_bullet_x < x + SIZE and s2aenemy_bullet_y >= y and s2aenemy_bullet_y < y + SIZE and aircraft_alive = '1') then
-                                  aircraft_hp <= aircraft_hp - 1;
+                                  aircraft_alive <= '0'; -- Aircraft is hit
                                   s2aenemy_shoot_bullet <= '0'; -- Enemy bullet disappears
                                   s2aenemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
-                                  if(aircraft_hp = 0) then
-                                      aircraft_alive <= '0'; -- Aircraft is hit
-                                  end if;
                               end if;
                       --s2a enemy_bullet_movement_process END*/
                       
@@ -599,12 +551,9 @@ begin
                               end if;
                               -- Check for collision with aircraft
                               if (s2benemy_bullet_x >= x and s2benemy_bullet_x < x + SIZE and s2benemy_bullet_y >= y and s2benemy_bullet_y < y + SIZE and aircraft_alive = '1') then
-                                  aircraft_hp <= aircraft_hp - 1;
+                                  aircraft_alive <= '0'; -- Aircraft is hit
                                   s2benemy_shoot_bullet <= '0'; -- Enemy bullet disappears
                                   s2benemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
-                                  if(aircraft_hp = 0) then
-                                      aircraft_alive <= '0'; -- Aircraft is hit
-                                  end if;
                               end if;
                       --s2b enemy_bullet_movement_process END*/
                       --s2c enemy_bullet_movement_process          
@@ -626,14 +575,12 @@ begin
                             end if;
                             -- Check for collision with aircraft
                             if (s2cenemy_bullet_x >= x and s2cenemy_bullet_x < x + SIZE and s2cenemy_bullet_y >= y and s2cenemy_bullet_y < y + SIZE and aircraft_alive = '1') then
-                                aircraft_hp <= aircraft_hp - 1;
+                                aircraft_alive <= '0'; -- Aircraft is hit
                                 s2cenemy_shoot_bullet <= '0'; -- Enemy bullet disappears
                                 s2cenemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
-                                if(aircraft_hp = 0) then
-                                    aircraft_alive <= '0'; -- Aircraft is hit
-                                end if;
                             end if;
-                    --s2c enemy_bullet_movement_process END*/         
+                    --s2c enemy_bullet_movement_process END*/
+                      
               else
             end if;
         end if;
@@ -647,17 +594,6 @@ begin
         --bullet
         if (hcount >= bullet_x and hcount < bullet_x + BULLET_WIDTH and vcount >= bullet_y and vcount < bullet_y + BULLET_HEIGHT) then
             color <= C_White;
-        --Health bar for aircraft
-        elsif (hcount >= heart_health_bar_x and hcount < heart_health_bar_x + heart_health_bar_height and vcount >= heart_health_bar_y and vcount < heart_health_bar_y + heart_health_bar_width) then
-            color <= C_BLACK;
-            for i in 0 to 9 loop
-                if(i <= aircraft_hp) then
-                  if(hcount >= heart_health_bar_x and hcount < heart_health_bar_x+heart_health_bar_height and vcount>=heart_health_bar_y + i*(heart_width+20) and vcount < heart_health_bar_y + i*(heart_width + 20)+heart_width) then
-                       color <= C_Yellow;
-                       exit;
-                   end if;
-                end if;
-            end loop;
         --enemy
         elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH and enemy_alive = '1') then
             color <= C_blue;
@@ -678,7 +614,6 @@ begin
         -- square (aircraft)
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
             color <= C_Red;
-        
         else
             color <= C_BLACK;
         end if;
