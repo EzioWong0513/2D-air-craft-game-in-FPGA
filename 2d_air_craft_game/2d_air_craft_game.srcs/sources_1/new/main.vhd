@@ -158,6 +158,14 @@ type T_1D is array(0 to 4) of colors;
 signal rand_val: std_logic_vector(2 downto 0);
 signal color : colors;
 signal aircraft_hp: integer := 10 - 1; --10HP
+
+--Heart health icon
+signal heart_width: integer := 30;
+signal heart_height: integer := 10;
+signal heart_health_bar_x: integer:= H_START + 5;
+signal heart_health_bar_y: integer:= V_START + 5;
+signal heart_health_bar_width: integer:= 500;
+signal heart_health_bar_height: integer:= 30;
 begin
 u_clk50mhz: clock_divider generic map(N=>1) port map(clk, clk50MHz); 
 
@@ -208,6 +216,7 @@ u_clk10hz : clock_divider generic map(N =>5000000) port map(clk, clk10Hz);
 process(clk10Hz)
 begin
     if(rising_edge(clk10Hz)) then
+        
         rand_val <= rand_val(1 downto 0) & (rand_val(2) xor rand_val(1));
         -- Reset game state when reset_game is '1'
         if (reset_game = '1') then
@@ -451,7 +460,7 @@ begin
                          enemy_alive <= '0'; -- Enemy is killed
                          Stage <= "010";--asd
                     end if;
-                end if;
+                end if; 
                 --bullet_movement_process END*/
     
         --enemy_bullet_movement_process          
@@ -638,6 +647,17 @@ begin
         --bullet
         if (hcount >= bullet_x and hcount < bullet_x + BULLET_WIDTH and vcount >= bullet_y and vcount < bullet_y + BULLET_HEIGHT) then
             color <= C_White;
+        --Health bar for aircraft
+        elsif (hcount >= heart_health_bar_x and hcount < heart_health_bar_x + heart_health_bar_height and vcount >= heart_health_bar_y and vcount < heart_health_bar_y + heart_health_bar_width) then
+            color <= C_BLACK;
+            for i in 0 to 9 loop
+                if(i <= aircraft_hp) then
+                  if(hcount >= heart_health_bar_x and hcount < heart_health_bar_x+heart_health_bar_height and vcount>=heart_health_bar_y + i*(heart_width+20) and vcount < heart_health_bar_y + i*(heart_width + 20)+heart_width) then
+                       color <= C_Yellow;
+                       exit;
+                   end if;
+                end if;
+            end loop;
         --enemy
         elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH and enemy_alive = '1') then
             color <= C_blue;
@@ -658,6 +678,7 @@ begin
         -- square (aircraft)
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
             color <= C_Red;
+        
         else
             color <= C_BLACK;
         end if;
