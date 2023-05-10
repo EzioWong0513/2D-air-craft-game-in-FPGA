@@ -449,7 +449,7 @@ begin
                          s2benemy_alive <= '1'; -- Enemy is killed
                          s2cenemy_alive <= '1'; -- Enemy is killed
                          enemy_alive <= '0'; -- Enemy is killed
-                         Stage <= "010";
+                         Stage <= "010";--asd
                     end if;
                 end if;
                 --bullet_movement_process END*/
