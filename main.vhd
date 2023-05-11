@@ -40,7 +40,7 @@ signal new_bullet_y: integer;
 --kill_aircraft
 signal aircraft_alive: std_logic := '1';
 --Boss
-constant BOSS_HEIGHT: integer := 150;
+constant BOSS_HEIGHT: integer := 125;
 constant BOSS_WIDTH: integer := 150;
 signal boss_x: integer := H_END - BOSS_HEIGHT;
 signal boss_y: integer := V_TOTAL/2;
@@ -51,7 +51,7 @@ signal boss_hp: integer := 10 - 1; --10HP
 constant BOSS_BULLET_WIDTH: integer := 20;
 constant BOSS_BULLET_HEIGHT: integer := 20;
 -- boss laser
-constant LASER_WIDTH: integer := 800;
+constant LASER_WIDTH: integer := 850;
 constant LASER_HEIGHT: integer := 100;
 signal boss_laser_x: integer := -LASER_WIDTH; -- Initialize off-screen
 signal boss_laser_y: integer := -LASER_HEIGHT; -- Initialize off-screen
@@ -82,6 +82,44 @@ signal aircraft_hp: integer := 10 - 1; --10HP
 type colors is (C_Black, C_Green, C_Blue, C_Red, C_White, C_Yellow);
 type T_1D is array(0 to 4) of colors;
 signal color : colors;
+--pixel art
+type PixelArt is array(0 to 11, 0 to 12) of colors;
+type PixelArt_boss is array(0 to 15, 0 to 16) of colors;
+constant AIRCRAFT_PIXEL_ART: PixelArt :=(
+(C_Black,C_Black,C_Black,C_Black,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_White,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_White,C_Green,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_White,C_Black,C_Black,C_Black,C_White,C_Green,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_White,C_White,C_White,C_White,C_Green,C_Green,C_Green,C_White,C_White,C_White,C_White,C_Black),
+(C_Black,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_Black),
+(C_Black,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_Black),
+(C_Black,C_White,C_White,C_White,C_White,C_Green,C_Green,C_Green,C_White,C_White,C_White,C_White,C_Black),
+(C_White,C_Black,C_Black,C_Black,C_White,C_Green,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_White,C_Green,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_White,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black));
+constant pixel_x: integer := (hcount - x) / 8;
+constant pixel_y: integer := (vcount - y) / 8;
+constant BOSS_PIXEL_ART: PixelArt_boss := (
+(C_White,C_White,C_White,C_Black,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_Black,C_White,C_White,C_White),
+(C_White,C_White,C_Black,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_White,C_Black,C_White,C_White),
+(C_White,C_White,C_Black,C_White,C_White,C_Black,C_White,C_White,C_White,C_White,C_White,C_Black,C_White,C_White,C_Black,C_White,C_White),
+(C_White,C_White,C_Black,C_White,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_White,C_Black,C_White,C_White),
+(C_White,C_White,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_White,C_White),
+(C_White,C_White,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_Black,C_White,C_White,C_White),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_White,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_Black,C_White,C_Black,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_White),
+(C_White,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_Black,C_White,C_Black,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_White),
+(C_White,C_White,C_Black,C_Black,C_White,C_White,C_Black,C_Black,C_White,C_Black,C_Black,C_White,C_White,C_Black,C_Black,C_White,C_White),
+(C_White,C_White,C_White,C_Black,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_Black,C_White,C_White,C_White),
+(C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White),
+(C_White,C_White,C_White,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_White,C_White,C_White),
+(C_White,C_White,C_White,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_White,C_White,C_White),
+(C_White,C_White,C_White,C_White,C_White,C_White,C_Black,C_White,C_White,C_White,C_Black,C_White,C_White,C_White,C_White,C_White,C_White),
+(C_White,C_White,C_White,C_White,C_White,C_White,C_Black,C_White,C_White,C_White,C_Black,C_White,C_White,C_White,C_White,C_White,C_White));
+constant boss_pixel_x: integer := (hcount - boss_x) / 8;
+constant boss_pixel_y: integer := (vcount - boss_y) / 8;
+
 begin
 u_clk50mhz: clock_divider generic map(N=>1) port map(clk, clk50MHz); 
 
@@ -231,15 +269,18 @@ begin
             if(boss_laser_active = '0' and boss_y > (V_START + V_END) / 2 - BOSS_WIDTH and boss_y < (V_START + V_END) / 2 + BOSS_WIDTH) then
                 boss_laser_active <= '1';
                 boss_laser_x <= boss_x - LASER_WIDTH;
-                boss_laser_y <= boss_y + BOSS_HEIGHT / 2;          
+                boss_laser_y <= boss_y + BOSS_HEIGHT / 2 - LASER_HEIGHT / 2;          
             else
                 boss_laser_active <= '0';
             end if;
             
             -- Check for collision with aircraft
             if (boss_laser_y >= y and boss_laser_y < y + SIZE and boss_laser_active = '1' and aircraft_alive = '1') then
-                aircraft_hp <= aircraft_hp - 2; -- Decrement aircraft's health points
-                if (aircraft_hp = 0) then
+                aircraft_hp <= aircraft_hp - 5; -- Decrement aircraft's health points
+                if(aircraft_hp <= 0) then
+                    aircraft_hp <= 0;
+                end if;
+                if (aircraft_hp <= 0) then
                     aircraft_alive <= '0'; -- Aircraft is killed
                 end if;
             end if;
@@ -258,13 +299,13 @@ begin
             color <= C_White;
         -- square (aircraft)
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
-            color <= C_Red;
+            color <= AIRCRAFT_PIXEL_ART(pixel_y, pixel_x);
         --boss
         elsif (hcount >= boss_x and hcount < boss_x + BOSS_HEIGHT and vcount < boss_y + BOSS_WIDTH and boss_y < vcount and boss_alive = '1') then
-            color <= C_Green;
+            color <= BOSS_PIXEL_ART(boss_pixel_x, boss_pixel_y);
         -- boss laser
         elsif (hcount >= boss_laser_x and hcount < boss_laser_x + LASER_WIDTH and vcount < boss_laser_y + LASER_HEIGHT and boss_laser_y < vcount and boss_laser_active = '1') then
-            color <= C_Yellow;
+            color <= C_RED;
         else
             color <= C_Black;
         end if;
