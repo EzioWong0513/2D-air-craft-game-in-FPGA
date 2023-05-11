@@ -1,35 +1,5 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 27.04.2023 15:13:08
--- Design Name: 
--- Module Name: main - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity main is
     Port (clk: in std_logic;
@@ -67,25 +37,6 @@ signal bullet_y: integer := -BULLET_HEIGHT; -- Initialize off-screen
 signal shoot_bullet: std_logic := '0';
 signal new_bullet_x: integer;
 signal new_bullet_y: integer;
---enemy
-constant ENEMY_WIDTH: integer := 100;
-constant ENEMY_HEIGHT: integer := 100;
-signal enemy_x: integer := H_END - ENEMY_HEIGHT;
-signal enemy_y: integer := V_TOTAL/2;
-signal enemy_dx: integer := 20;
-signal enemy_dy: integer := 20;
-signal enemy_display: std_logic := '0';
-signal enemy_hp: integer := 3 - 1; --3HP
---kill_enemy
-signal enemy_alive: std_logic := '1';
---enemy_bullet
-constant ENEMY_BULLET_WIDTH: integer := 20;
-constant ENEMY_BULLET_HEIGHT: integer := 20;
-signal enemy_bullet_x: integer := -ENEMY_BULLET_WIDTH; -- Initialize off-screen
-signal enemy_bullet_y: integer := -ENEMY_BULLET_HEIGHT; -- Initialize off-screen
-signal enemy_shoot_bullet: std_logic := '0';
-signal new_enemy_bullet_x: integer;
-signal new_enemy_bullet_y: integer;
 --kill_aircraft
 signal aircraft_alive: std_logic := '1';
 --Boss
@@ -99,6 +50,12 @@ signal boss_flagy: std_logic := '1';
 signal boss_hp: integer := 10 - 1; --10HP
 constant BOSS_BULLET_WIDTH: integer := 20;
 constant BOSS_BULLET_HEIGHT: integer := 20;
+-- boss laser
+constant LASER_WIDTH: integer := 800;
+constant LASER_HEIGHT: integer := 100;
+signal boss_laser_x: integer := -LASER_WIDTH; -- Initialize off-screen
+signal boss_laser_y: integer := -LASER_HEIGHT; -- Initialize off-screen
+signal boss_laser_active: std_logic := '0';
 --kill Boss
 signal boss_alive: std_logic := '1';
 
@@ -179,26 +136,18 @@ begin
         if (reset_game = '1') then
             x <= H_START;
             y <= V_START;
-            enemy_x <= H_END - ENEMY_HEIGHT;
-            enemy_y <= V_TOTAL / 2;
-            enemy_alive <= '1';
             aircraft_alive <= '1';
             boss_alive <= '1';
             shoot_bullet <= '0';
             bullet_x <= -BULLET_WIDTH;
             bullet_y <= -BULLET_HEIGHT;
-            enemy_shoot_bullet <= '0';
-            enemy_bullet_x <= -ENEMY_BULLET_WIDTH;
-            enemy_bullet_y <= -ENEMY_BULLET_HEIGHT;
             -- Reset the boss's health points
             boss_hp <= 10 - 1; --10HP
-            -- Reset the enemy's health points
-            enemy_hp <= 3 - 1; --3HP
             -- Reset the aircraft's health points
             aircraft_hp <= 10 - 1; --10HP
         else
 
-            -- The existing code for movements, shooting, and enemy actions
+            -- The existing code for movements, shooting
             --/*move up, down, left, right && shoot
             if (moveU = '1') then
                 if (x < (H_END - SIZE)) then
@@ -230,39 +179,10 @@ begin
                 new_bullet_y <= y - BULLET_HEIGHT;
             end if;
                    
-            --enemy
-            if(display_enemy = '1') then
-                if (enemy_x + ENEMY_HEIGHT >= H_END) then
-                    flagx <= '0';       
-                elsif (enemy_x <= H_START) then
-                    flagx <= '1';
-                end if;
-                                    
-                if (enemy_y + ENEMY_WIDTH >= V_END) then
-                    flagy <= '0';
-                elsif (enemy_y <= V_START) then
-                    flagy <= '1';
-                end if;
-                          
-                if(flagx = '1') then
-                    enemy_x <= enemy_x + enemy_dx;
-                elsif (flagx = '0') then
-                    enemy_x <= enemy_x - enemy_dx;
-                end if;
-                                    
-                if(flagy = '1') then
-                    enemy_y <= enemy_y + enemy_dy;
-                elsif (flagy = '0') then
-                    enemy_y <= enemy_y - enemy_dy;
-                end if;
-            end if;
             --move up, down, left, right && shoot END*/
             
             --/*bullet_movement_process
-                   if(enemy_alive = '1' and enemy_bullet_y <= V_START) then
-                       new_enemy_bullet_x <= enemy_x + (ENEMY_WIDTH / 2) - (ENEMY_BULLET_WIDTH / 2);
-                       new_enemy_bullet_y <= enemy_y - ENEMY_BULLET_HEIGHT;
-                   end if;
+
                    
                     if (shoot_bullet = '1') then
                         if (bullet_x < H_END) then
@@ -278,16 +198,6 @@ begin
                         shoot_bullet <= '0';
                         bullet_x <= -BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
                     end if;
-                    -- Check for collision with enemy
-                    if (bullet_x >= enemy_x and bullet_x < enemy_x + ENEMY_WIDTH and bullet_y >= enemy_y and bullet_y < enemy_y + ENEMY_HEIGHT and enemy_alive = '1') then
-                        enemy_hp <= enemy_hp - 1; -- Decrement enemy's health points
-                        shoot_bullet <= '0'; -- Bullet disappears
-                        bullet_x <= -BULLET_WIDTH; -- Set the bullet's position off-screen
-               
-                        if (enemy_hp = 0) then
-                            enemy_alive <= '0'; -- Enemy is killed
-                        end if;
-                    end if;
                     
                     -- Check for collision with boss
                     if (bullet_x >= boss_x and bullet_x < boss_x + BOSS_WIDTH and bullet_y >= boss_y and bullet_y < boss_y + BOSS_HEIGHT and boss_alive = '1') then
@@ -301,34 +211,7 @@ begin
                     end if;
             --bullet_movement_process END*/
 
-            --enemy_bullet_movement_process          
-                    if (enemy_shoot_bullet = '1') then
-                        if (enemy_bullet_x > 0) then
-                            enemy_bullet_x <= enemy_bullet_x - dx;
-                        else
-                            enemy_shoot_bullet <= '0'; -- Reset shoot_bullet if the bullet goes beyond the display area
-                        end if;
-                    -- Add the following lines to trigger shooting when the enemy is alive
-                    elsif (enemy_alive = '1' and enemy_shoot_bullet = '0') then
-                        enemy_shoot_bullet <= '1';
-                        enemy_bullet_x <= enemy_x - ENEMY_BULLET_WIDTH;
-                        enemy_bullet_y <= enemy_y + (ENEMY_HEIGHT / 2) - (ENEMY_BULLET_HEIGHT / 2); -- Set the bullet_y initial position to the top of the enemy
-                    -- End of added lines
-                    else
-                        enemy_shoot_bullet <= '0';
-                        enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Reset the bullet off-screen when it is not shooting
-                    end if;
-                    -- Check for collision with aircraft
-                    if (enemy_bullet_x >= x and enemy_bullet_x < x + SIZE and enemy_bullet_y >= y and enemy_bullet_y < y + SIZE and aircraft_alive = '1') then
-                        aircraft_hp <= aircraft_hp - 1;
-                        enemy_shoot_bullet <= '0'; -- Enemy bullet disappears
-                        enemy_bullet_x <= -ENEMY_BULLET_WIDTH; -- Set the enemy bullet's position off-screen
-                        
-                        if(aircraft_hp = 0) then
-                            aircraft_alive <= '0'; -- Aircraft is hit
-                        end if;
-                    end if;
-            --enemy_bullet_movement_process END*/
+
             
             --boss_movement
             if (boss_y <= V_START) then
@@ -343,28 +226,45 @@ begin
                 boss_y <= boss_y - 20;
             end if;
             --boss_movement END
+            --boss_laser
+            -- boss shoots a laser
+            if(boss_laser_active = '0' and boss_y > (V_START + V_END) / 2 - BOSS_WIDTH and boss_y < (V_START + V_END) / 2 + BOSS_WIDTH) then
+                boss_laser_active <= '1';
+                boss_laser_x <= boss_x - LASER_WIDTH;
+                boss_laser_y <= boss_y + BOSS_HEIGHT / 2;          
+            else
+                boss_laser_active <= '0';
+            end if;
+            
+            -- Check for collision with aircraft
+            if (boss_laser_y >= y and boss_laser_y < y + SIZE and boss_laser_active = '1' and aircraft_alive = '1') then
+                aircraft_hp <= aircraft_hp - 2; -- Decrement aircraft's health points
+                if (aircraft_hp = 0) then
+                    aircraft_alive <= '0'; -- Aircraft is killed
+                end if;
+            end if;
+            --boss_laser end
+            
         end if;
     end if;
 end process;
 
 --display
-process (hcount, vcount, x, y, bullet_x, bullet_y, enemy_bullet_x, enemy_bullet_y)
+process (hcount, vcount, x, y, bullet_x, bullet_y)
 begin
     if ((hcount >= H_START and hcount < H_END) and (vcount >= V_START and vcount < V_TOTAL)) then
         --bullet
         if (hcount >= bullet_x and hcount < bullet_x + BULLET_WIDTH and vcount >= bullet_y and vcount < bullet_y + BULLET_HEIGHT) then
             color <= C_White;
-        --enemy
-        elsif (enemy_x <= hcount and hcount < enemy_x + ENEMY_HEIGHT and enemy_y < vcount and vcount < enemy_y + ENEMY_WIDTH and enemy_alive = '1') then
-            color <= C_blue;
-        elsif (hcount >= enemy_bullet_x and hcount < enemy_bullet_x + ENEMY_BULLET_WIDTH and vcount >= enemy_bullet_y and vcount < enemy_bullet_y + ENEMY_BULLET_HEIGHT) then
-            color <= C_Yellow;
         -- square (aircraft)
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
             color <= C_Red;
-        --boss and projectiles
+        --boss
         elsif (hcount >= boss_x and hcount < boss_x + BOSS_HEIGHT and vcount < boss_y + BOSS_WIDTH and boss_y < vcount and boss_alive = '1') then
             color <= C_Green;
+        -- boss laser
+        elsif (hcount >= boss_laser_x and hcount < boss_laser_x + LASER_WIDTH and vcount < boss_laser_y + LASER_HEIGHT and boss_laser_y < vcount and boss_laser_active = '1') then
+            color <= C_Yellow;
         else
             color <= C_Black;
         end if;
