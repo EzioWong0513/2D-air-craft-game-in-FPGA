@@ -832,6 +832,7 @@ begin
                 
                     if (boss_hp = 0) then
                         boss_alive <= '0'; -- Boss is killed
+                        boss_laser_active: std_logic <= '0';
                     end if;
                 end if;
 
