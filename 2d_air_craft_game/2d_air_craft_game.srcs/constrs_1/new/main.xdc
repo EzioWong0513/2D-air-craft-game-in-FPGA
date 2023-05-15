@@ -1,6 +1,6 @@
-set_property IOSTANDARD LVCMOS33 [get_ports {clk}]
-set_property PACKAGE_PIN Y9 [get_ports {clk}]
-create_clock -period 10 [get_ports clk]
+set_property IOSTANDARD LVCMOS33 [get_ports {clk}];
+set_property PACKAGE_PIN Y9 [get_ports {clk}];
+create_clock -period 10 [get_ports clk];
 
 set_property PACKAGE_PIN Y21 [get_ports {blue[0]}]; # "VGA-B0"
 set_property PACKAGE_PIN Y20 [get_ports {blue[1]}]; # "VGA-B1"
@@ -25,6 +25,7 @@ set_property PACKAGE_PIN R18 [get_ports moveR];
 set_property PACKAGE_PIN P16 [get_ports shoot];
 set_property PACKAGE_PIN F22 [get_ports display_enemy];
 set_property PACKAGE_PIN M15 [get_ports reset_game];
+set_property PACKAGE_PIN G22 [get_ports reset_pmod];
 set_property IOSTANDARD LVCMOS33 [get_ports moveU];                                             
 set_property IOSTANDARD LVCMOS33 [get_ports moveD];
 set_property IOSTANDARD LVCMOS33 [get_ports moveL];
@@ -32,3 +33,30 @@ set_property IOSTANDARD LVCMOS33 [get_ports moveR];
 set_property IOSTANDARD LVCMOS33 [get_ports shoot];
 set_property IOSTANDARD LVCMOS33 [get_ports display_enemy];
 set_property IOSTANDARD LVCMOS33 [get_ports reset_game];
+set_property IOSTANDARD LVCMOS33 [get_ports reset_pmod];
+
+set_property PACKAGE_PIN Y11 [get_ports {SPIChipSelect}]; # "JA1"
+set_property IOSTANDARD LVCMOS33 [get_ports SPIChipSelect];                                             
+set_property PACKAGE_PIN AA11 [get_ports {SPIMOSI}]; # "JA2"
+set_property IOSTANDARD LVCMOS33 [get_ports SPIMOSI];
+set_property PACKAGE_PIN Y10 [get_ports {SPIMISO}]; # "JA3"
+set_property IOSTANDARD LVCMOS33 [get_ports SPIMISO];         
+set_property PACKAGE_PIN AA9 [get_ports {SPICLOCK}]; # "JA4"
+set_property IOSTANDARD LVCMOS33 [get_ports SPICLOCK];         
+
+set_property PACKAGE_PIN T22 [get_ports {led[0]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[0]];
+set_property PACKAGE_PIN T21 [get_ports {led[1]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[1]];
+set_property PACKAGE_PIN U22 [get_ports {led[2]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[2]];
+set_property PACKAGE_PIN U21 [get_ports {led[3]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[3]];
+set_property PACKAGE_PIN V22 [get_ports {led[4]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[4]];
+set_property PACKAGE_PIN W22 [get_ports {led[5]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[5]];
+set_property PACKAGE_PIN U19 [get_ports {led[6]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[6]];
+set_property PACKAGE_PIN U14 [get_ports {led[7]}];
+set_property IOSTANDARD LVCMOS33 [get_ports led[7]];

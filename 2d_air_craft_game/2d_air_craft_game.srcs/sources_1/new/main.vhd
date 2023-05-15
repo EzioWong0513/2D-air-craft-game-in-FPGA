@@ -21,7 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
+use IEEE.NUMERIC_STD.ALL;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -38,7 +38,13 @@ entity main is
     moveU, moveD, moveL, moveR: in std_logic;
     shoot: in std_logic;
     display_enemy: in std_logic;
-    reset_game: in std_logic);
+    reset_game: in std_logic;
+    reset_pmod: in std_logic;
+    SPIChipSelect: out std_logic;
+    SPIMOSI: out std_logic;
+    SPIMISO: in std_logic;
+    SPICLOCK: buffer std_logic;
+    led: out std_logic_vector(7 downto 0));
 end main;
 
 architecture Behavioral of main is
@@ -47,9 +53,9 @@ signal Stage: std_logic_vector(2 downto 0) := "100"; -- Starts from stage1 (stag
 constant H_TOTAL: integer := 1344-1;
 constant H_SYNC: integer := 48-1;
 constant H_BACK: integer := 240-1;
-constant H_START: integer := 48+240-1;
+constant H_START: integer := 48+240-1+200;
 constant H_ACTIVE: integer := 1024-1;
-constant H_END: integer := 1344-32-1-50;
+constant H_END: integer := 1344-32-1-50+100;
 constant H_FRONT: integer := 32-1;
 constant V_TOTAL: integer := 625-1;
 constant V_SYNC: integer := 3-1;
@@ -129,6 +135,24 @@ signal s2cnew_enemy_bullet_y: integer;
 --kill_aircraft
 signal aircraft_alive: std_logic := '1';
 
+component pmod_joystick is
+  generic(
+    clk_freq: integer := 50
+  );
+  port(
+    clk: in std_logic;
+    reset_n: in std_logic;
+    miso: in std_logic;
+    mosi: out std_logic;
+    sclk: buffer std_logic;
+    cs_n: out std_logic;
+    x_position: out std_logic_vector(7 downto 0);
+    y_position: out std_logic_vector(7 downto 0);
+    trigger_button: out std_logic;
+    center_button: out std_logic
+  );
+end component;
+
 component clock_divider is
  generic (N: integer);
    Port (
@@ -166,8 +190,31 @@ signal heart_health_bar_x: integer:= H_START + 5;
 signal heart_health_bar_y: integer:= V_START + 5;
 signal heart_health_bar_width: integer:= 500;
 signal heart_health_bar_height: integer:= 30;
+
+--PmodJoystick2
+signal joystick_x: std_logic_vector(7 downto 0);
+signal joystick_y: std_logic_vector(7 downto 0);
+signal joystick_trigger: std_logic;
+signal joystick_center: std_logic;
 begin
 u_clk50mhz: clock_divider generic map(N=>1) port map(clk, clk50MHz); 
+
+pmod_joystick_inst: pmod_joystick
+generic map (
+  clk_freq => 50
+)
+port map (
+  clk => clk50MHz,  -- connect to your system clock
+  reset_n => reset_pmod,  -- connect to your reset signal
+  miso => SPIMISO,  -- connect to SPI MISO signal
+  mosi => SPIMOSI,  -- connect to SPI MOSI signal
+  sclk => SPICLOCK,  -- connect to SPI clock signal
+  cs_n => SPIChipSelect,  -- connect to SPI chip select signal
+  x_position => joystick_x,  -- connect to joystick X position signal
+  y_position => joystick_y,  -- connect to joystick Y position signal
+  trigger_button => joystick_trigger,  -- connect to joystick trigger button signal
+  center_button => joystick_center  -- connect to joystick center button signal
+);
 
 pixel_count_proc: process(clk50MHz)
 begin
@@ -198,6 +245,13 @@ begin
                 vcount <= vcount + 1;
             end if;
         end if;
+        
+        if(unsigned(joystick_y) < "01010101") then
+            led<="00000100";
+        elsif (unsigned(joystick_y) < "10101010") then
+            led<="00000010";
+        else led<= "00000001";
+        end if;
     end if;
 end process line_count_proc;
 
@@ -213,10 +267,11 @@ end process vsync_gen_proc;
 u_clk1hz : clock_divider generic map(N =>50000000) port map(clk, clk1Hz);
 u_clk10hz : clock_divider generic map(N =>5000000) port map(clk, clk10Hz);
 
+-- Process to read joystick position
+
 process(clk10Hz)
 begin
     if(rising_edge(clk10Hz)) then
-        
         rand_val <= rand_val(1 downto 0) & (rand_val(2) xor rand_val(1));
         -- Reset game state when reset_game is '1'
         if (reset_game = '1') then
@@ -252,33 +307,26 @@ begin
             -- Reset the aircraft's health points
             aircraft_hp <= 10 - 1; --10HP
             Stage <= "100";      
-        else
-            -- The existing code for movements, shooting, and enemy actions
-            --/*move up, down, left, right && shoot
-            if (moveU = '1') then
+        else          
+            if(unsigned(joystick_y) < "01010101") then
                 if (x < (H_END - SIZE)) then
                     x <= x + dx; 
                 end if;
-            end if;
-           
-            if (moveD = '1') then
+            elsif (unsigned(joystick_y) > "10101010") then
                 if (x > H_START) then
                     x <= x - dx; 
                 end if;
             end if;
-           
-            if (moveL = '1') then
+            
+            if(unsigned(joystick_x) < "01010101") then
                 if (y > V_START) then
                     y <= y - dy;
                 end if;
-            end if;
-           
-            if (moveR = '1') then
+            elsif(unsigned(joystick_x) > "10101010") then
                 if (y < (V_END - SIZE)) then
                     y <= y + dy;
                 end if;
-            end if;   
-                   
+            end if;
             --shoot
             if (shoot = '1' and bullet_y <= V_START) then
                 if (aircraft_alive = '1') then
@@ -636,6 +684,7 @@ begin
                     --s2c enemy_bullet_movement_process END*/         
               else
             end if;
+            --else
         end if;
     end if;
 end process;
