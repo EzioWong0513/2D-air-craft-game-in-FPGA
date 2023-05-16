@@ -808,7 +808,7 @@ begin
         end if;
         
         --Ultimate Skill check for collision with enemy
-        if ((US_y >= enemy_y and US_y < enemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and enemy_alive = '1') then
+        if (((enemy_y <= US_y + US_HEIGHT and enemy_y + ENEMY_HEIGHT >= US_y) or (enemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and enemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
             enemy_hp <= enemy_hp - 5; -- Decrement enemy's health points
             if (enemy_hp <= 0) then
                 s2aenemy_alive <= '1'; 
@@ -1002,7 +1002,7 @@ begin
                         end if;
                         
                         --Ultimate Skill check for collision with s2aenemy
-                        if ((US_y >= s2aenemy_y and US_y < s2aenemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and s2aenemy_alive = '1') then
+                        if (((s2aenemy_y <= US_y + US_HEIGHT and s2aenemy_y + ENEMY_HEIGHT >= US_y) or (s2aenemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2aenemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
                             s2aenemy_hp <= s2aenemy_hp - 5; -- Decrement boss's health points
                             if (s2aenemy_hp <= 0) then
                                 s2aenemy_alive <= '0'; -- Enemy is killed
@@ -1010,7 +1010,7 @@ begin
                         end if;
 
                         --Ultimate Skill check for collision with s2benemy
-                        if ((US_y >= s2benemy_y and US_y < s2benemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and s2benemy_alive = '1') then
+                        if (((s2benemy_y <= US_y + US_HEIGHT and s2benemy_y + ENEMY_HEIGHT >= US_y) or (s2benemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2benemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
                             s2benemy_hp <= s2benemy_hp - 5; -- Decrement boss's health points
                             if (s2benemy_hp <= 0) then
                                 s2benemy_alive <= '0'; -- Enemy is killed
@@ -1018,7 +1018,7 @@ begin
                         end if; 
                          
                         --Ultimate Skill check for collision with s2cenemy
-                        if ((US_y >= s2cenemy_y and US_y < s2cenemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and s2cenemy_alive = '1') then
+                        if (((s2cenemy_y <= US_y + US_HEIGHT and s2cenemy_y + ENEMY_HEIGHT >= US_y) or (s2cenemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2cenemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
                             s2cenemy_hp <= s2cenemy_hp - 5; -- Decrement boss's health points
                             if (s2cenemy_hp <= 0) then
                                 s2cenemy_alive <= '0'; -- Enemy is killed
@@ -1125,7 +1125,7 @@ begin
                             end if;
                             
                             --Ultimate Skill check for collision with boss
-                            if ((US_y >= boss_y and US_y < boss_y + BOSS_WIDTH) and ultimate_activation = '1' and boss_alive = '1') then
+                            if (((boss_y <= US_y + US_HEIGHT and boss_y + ENEMY_HEIGHT >= US_y) or (boss_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and boss_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
                                 boss_hp <= boss_hp - 5; -- Decrement boss's health points
                                 if (boss_hp <= 0) then
                                     boss_alive <= '0'; -- Enemy is killed
