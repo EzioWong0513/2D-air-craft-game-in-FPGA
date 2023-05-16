@@ -324,6 +324,75 @@ constant BOSS_PIXEL_ART: PixelArt_boss := (
 (C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_Black,C_Black,C_Black,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black));
 constant boss_pixel_x: integer := (hcount - boss_x) / 8;
 constant boss_pixel_y: integer := (vcount - boss_y) / 8;
+type PixelArt_US is array (0 to 64, 0 to 27) of colors;
+constant US_PIXEL_ART: PixelArt_US :=(
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_Purple,C_Purple,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_Purple,C_Purple,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_White,C_White,C_White,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_White,C_White,C_White,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_White,C_Blue,C_Blue,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_Blue,C_Blue,C_White,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_Green,C_Green,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_Green,C_Green,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_Yellow,C_Yellow,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_Yellow,C_Yellow,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_Orange,C_Orange,C_Red,C_Red,C_Orange,C_Orange,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_Red,C_Red,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_Red,C_Red,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black),
+(C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_White,C_White,C_White,C_White,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black,C_Black));
+constant US_pixel_x: integer := (hcount - US_x) / 9;
+constant US_pixel_y: integer := (vcount - US_y) / 9;
 
 --Heart health icon
 signal heart_width: integer := 30;
@@ -738,15 +807,15 @@ begin
             end if;
         end if;
         
-        --Ultimate Skill check for collision with boss
-        if ((US_y >= enemy_y or US_y < enemy_y + SIZE) and ultimate_activation = '1' and enemy_alive = '1') then
-            enemy_hp <= enemy_hp - 5; -- Decrement boss's health points
+        --Ultimate Skill check for collision with enemy
+        if ((US_y >= enemy_y and US_y < enemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and enemy_alive = '1') then
+            enemy_hp <= enemy_hp - 5; -- Decrement enemy's health points
             if (enemy_hp <= 0) then
-                s2aenemy_alive <= '1'; -- Enemy is killed
-                s2benemy_alive <= '1'; -- Enemy is killed
-                s2cenemy_alive <= '1'; -- Enemy is killed
+                s2aenemy_alive <= '1'; 
+                s2benemy_alive <= '1'; 
+                s2cenemy_alive <= '1'; 
                 enemy_alive <= '0'; -- Enemy is killed
-                Stage <= "010";--asd
+                Stage <= "010";
             end if;
         end if;
         
@@ -933,7 +1002,7 @@ begin
                         end if;
                         
                         --Ultimate Skill check for collision with s2aenemy
-                        if ((US_y >= s2aenemy_y or US_y < s2aenemy_y + SIZE) and ultimate_activation = '1' and s2aenemy_alive = '1') then
+                        if ((US_y >= s2aenemy_y and US_y < s2aenemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and s2aenemy_alive = '1') then
                             s2aenemy_hp <= s2aenemy_hp - 5; -- Decrement boss's health points
                             if (s2aenemy_hp <= 0) then
                                 s2aenemy_alive <= '0'; -- Enemy is killed
@@ -941,7 +1010,7 @@ begin
                         end if;
 
                         --Ultimate Skill check for collision with s2benemy
-                        if ((US_y >= s2benemy_y or US_y < s2benemy_y + SIZE) and ultimate_activation = '1' and s2benemy_alive = '1') then
+                        if ((US_y >= s2benemy_y and US_y < s2benemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and s2benemy_alive = '1') then
                             s2benemy_hp <= s2benemy_hp - 5; -- Decrement boss's health points
                             if (s2benemy_hp <= 0) then
                                 s2benemy_alive <= '0'; -- Enemy is killed
@@ -949,7 +1018,7 @@ begin
                         end if; 
                          
                         --Ultimate Skill check for collision with s2cenemy
-                        if ((US_y >= s2cenemy_y or US_y < s2cenemy_y + SIZE) and ultimate_activation = '1' and s2cenemy_alive = '1') then
+                        if ((US_y >= s2cenemy_y and US_y < s2cenemy_y + ENEMY_WIDTH) and ultimate_activation = '1' and s2cenemy_alive = '1') then
                             s2cenemy_hp <= s2cenemy_hp - 5; -- Decrement boss's health points
                             if (s2cenemy_hp <= 0) then
                                 s2cenemy_alive <= '0'; -- Enemy is killed
@@ -1055,8 +1124,8 @@ begin
                                 end if;
                             end if;
                             
-                            --Ultimate Skill check for collision with s2aenemy
-                            if ((US_y >= boss_y or US_y < boss_y + SIZE) and ultimate_activation = '1' and boss_alive = '1') then
+                            --Ultimate Skill check for collision with boss
+                            if ((US_y >= boss_y and US_y < boss_y + BOSS_WIDTH) and ultimate_activation = '1' and boss_alive = '1') then
                                 boss_hp <= boss_hp - 5; -- Decrement boss's health points
                                 if (boss_hp <= 0) then
                                     boss_alive <= '0'; -- Enemy is killed
@@ -1102,12 +1171,12 @@ begin
             color <=S2CENEMY_PIXEL_ART(s2cenemy_pixel_x, s2cenemy_pixel_y);
         elsif (hcount >= s2cenemy_bullet_x and hcount < s2cenemy_bullet_x + ENEMY_BULLET_WIDTH and vcount >= s2cenemy_bullet_y and vcount < s2cenemy_bullet_y + ENEMY_BULLET_HEIGHT) then
             color <= C_Yellow;
-        -- square (aircraft)
+        -- aircraft
         elsif (x <= hcount and hcount < x + SIZE and y < vcount and vcount < y + SIZE and aircraft_alive = '1') then
             color <= AIRCRAFT_PIXEL_ART(pixel_y, pixel_x);
         --ultimate skill display
         elsif (hcount >= US_x and hcount < US_x + US_WIDTH and vcount < US_y + US_HEIGHT and US_y < vcount and ultimate_activation = '1') then
-            color <= C_Yellow;
+            color <= US_PIXEL_ART(US_pixel_x, US_pixel_y);
         --boss
         elsif (hcount >= boss_x and hcount < boss_x + BOSS_HEIGHT and vcount < boss_y + BOSS_WIDTH and boss_y < vcount and boss_alive = '1') then
             color <= BOSS_PIXEL_ART(boss_pixel_x, boss_pixel_y);
@@ -1143,6 +1212,12 @@ case(color) is
     when C_Yellow =>
         red <= "1111"; green <= "1111";
         blue <= "0000";
+    when C_Orange =>
+        red <= "1111"; green <= "0101";
+        blue <= "0000";
+    when C_Purple =>
+        red <= "1111"; green <= "0000";
+        blue <= "1111";
     when others =>
         red <= "0000"; green <= "0000";
         blue <= "0000";
