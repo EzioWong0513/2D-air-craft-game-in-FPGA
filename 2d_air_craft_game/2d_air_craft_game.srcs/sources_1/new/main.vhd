@@ -213,7 +213,7 @@ signal s2bflagx: std_logic := '1';
 signal s2bflagy: std_logic := '1';
 signal s2cflagx: std_logic := '1';
 signal s2cflagy: std_logic := '1';
-type colors is (C_Black, C_Green, C_Blue, C_Red, C_White, C_Yellow);
+type colors is (C_Black, C_Green, C_Blue, C_Red, C_White, C_Yellow, C_Purple, C_Orange);
 type T_1D is array(0 to 4) of colors;
 signal rand_val: std_logic_vector(2 downto 0);
 signal color : colors;
@@ -789,12 +789,12 @@ begin
         elsif (unsigned(joystick_x) > "10101010" and ultimate_state = 7) then --right
                 ultimate_state <= 8;
         elsif (ulti_shoot = '1' and ultimate_state = 8) then
-            --if(aircraft_hp < 3) then
+            if(aircraft_hp < 3) then
                 ultimate_activation <= '1';
                 US_x <= x + SIZE;
                 US_y <= y + (SIZE / 2) - (US_HEIGHT / 2);
                 ultiSkill_start_time <= ultiSkill_current_time;
-            --end if;
+            end if;
             ultimate_state <= 0;
         elsif (current_time - start_time > TIMEOUT) then
             ultimate_state <= 0;
@@ -983,12 +983,12 @@ begin
                         elsif (unsigned(joystick_x) > "10101010" and ultimate_state = 7) then --right
                                 ultimate_state <= 8;
                         elsif (ulti_shoot = '1' and ultimate_state = 8) then
-                            --if(aircraft_hp < 3) then
+                            if(aircraft_hp < 3) then
                                 ultimate_activation <= '1';
                                 US_x <= x + SIZE;
                                 US_y <= y + (SIZE / 2) - (US_HEIGHT / 2);
                                 ultiSkill_start_time <= ultiSkill_current_time;
-                            --end if;
+                            end if;
                             ultimate_state <= 0;
                         elsif (current_time - start_time > TIMEOUT) then
                             ultimate_state <= 0;
@@ -1106,12 +1106,12 @@ begin
                             elsif (unsigned(joystick_x) > "10101010" and ultimate_state = 7) then --right
                                     ultimate_state <= 8;
                             elsif (ulti_shoot = '1' and ultimate_state = 8) then
-                                --if(aircraft_hp < 3) then
+                                if(aircraft_hp < 3) then
                                     ultimate_activation <= '1';
                                     US_x <= x + SIZE;
                                     US_y <= y + (SIZE / 2) - (US_HEIGHT / 2);
                                     ultiSkill_start_time <= ultiSkill_current_time;
-                                --end if;
+                                end if;
                                 ultimate_state <= 0;
                             elsif (current_time - start_time > TIMEOUT) then
                                 ultimate_state <= 0;
