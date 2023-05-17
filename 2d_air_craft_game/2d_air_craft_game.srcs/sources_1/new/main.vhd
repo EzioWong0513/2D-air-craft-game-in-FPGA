@@ -1002,7 +1002,7 @@ begin
                         end if;
                         
                         --Ultimate Skill check for collision with s2aenemy
-                        if (((s2aenemy_y <= US_y + US_HEIGHT and s2aenemy_y + ENEMY_HEIGHT >= US_y) or (s2aenemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2aenemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
+                        if (((s2aenemy_y <= US_y + US_HEIGHT and s2aenemy_y + ENEMY_HEIGHT >= US_y) or (s2aenemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2aenemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and s2aenemy_alive = '1') then
                             s2aenemy_hp <= s2aenemy_hp - 5; -- Decrement boss's health points
                             if (s2aenemy_hp <= 0) then
                                 s2aenemy_alive <= '0'; -- Enemy is killed
@@ -1010,7 +1010,7 @@ begin
                         end if;
 
                         --Ultimate Skill check for collision with s2benemy
-                        if (((s2benemy_y <= US_y + US_HEIGHT and s2benemy_y + ENEMY_HEIGHT >= US_y) or (s2benemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2benemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
+                        if (((s2benemy_y <= US_y + US_HEIGHT and s2benemy_y + ENEMY_HEIGHT >= US_y) or (s2benemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2benemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and s2benemy_alive = '1') then
                             s2benemy_hp <= s2benemy_hp - 5; -- Decrement boss's health points
                             if (s2benemy_hp <= 0) then
                                 s2benemy_alive <= '0'; -- Enemy is killed
@@ -1018,7 +1018,7 @@ begin
                         end if; 
                          
                         --Ultimate Skill check for collision with s2cenemy
-                        if (((s2cenemy_y <= US_y + US_HEIGHT and s2cenemy_y + ENEMY_HEIGHT >= US_y) or (s2cenemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2cenemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
+                        if (((s2cenemy_y <= US_y + US_HEIGHT and s2cenemy_y + ENEMY_HEIGHT >= US_y) or (s2cenemy_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and s2cenemy_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and s2cenemy_alive = '1') then
                             s2cenemy_hp <= s2cenemy_hp - 5; -- Decrement boss's health points
                             if (s2cenemy_hp <= 0) then
                                 s2cenemy_alive <= '0'; -- Enemy is killed
@@ -1051,7 +1051,7 @@ begin
                         
                         -- Check for collision with aircraft
                         if (boss_laser_y >= y and boss_laser_y < y + SIZE and boss_laser_active = '1' and aircraft_alive = '1') then
-                            aircraft_hp <= aircraft_hp - 5; -- Decrement aircraft's health points
+                            aircraft_hp <= aircraft_hp - 6; -- Decrement aircraft's health points
                             if (aircraft_hp <= 0) then
                                 aircraft_alive <= '0'; -- Aircraft is killed
                             end if;
@@ -1125,7 +1125,7 @@ begin
                             end if;
                             
                             --Ultimate Skill check for collision with boss
-                            if (((boss_y <= US_y + US_HEIGHT and boss_y + ENEMY_HEIGHT >= US_y) or (boss_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and boss_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and enemy_alive = '1') then
+                            if (((boss_y <= US_y + US_HEIGHT and boss_y + ENEMY_HEIGHT >= US_y) or (boss_y + ENEMY_HEIGHT <= US_y + US_HEIGHT and boss_y + ENEMY_HEIGHT >= US_y)) and ultimate_activation = '1' and boss_alive = '1') then
                                 boss_hp <= boss_hp - 5; -- Decrement boss's health points
                                 if (boss_hp <= 0) then
                                     boss_alive <= '0'; -- Enemy is killed
