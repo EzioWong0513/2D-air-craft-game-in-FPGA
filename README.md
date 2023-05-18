@@ -11,3 +11,5 @@ R16: FREEZE ENEMIES
 M15: RESET GAME
 
 *Perform ultimate skill: up up down down left left right right R16 P16
+
+*Set T21 = '1' before start gaming.
