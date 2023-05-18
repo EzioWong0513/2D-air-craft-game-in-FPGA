@@ -2,16 +2,12 @@
 
 GAME INSTRUCTION:
 
-T18: MOVE UPWARD
-
-R16: MOVE DOWNWARD
-
-N15: MOVE LEFT
-
-R18: MOVE RIGHT
+Joystick2: MOVE DIRECTION
 
 P16: SHOOTING
 
-F22: FREEZE ENEMIES
+R16: FREEZE ENEMIES
 
 M15: RESET GAME
+
+*Perform ultimate skill: up up down down left left right right R16 P16
